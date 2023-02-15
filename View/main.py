@@ -1,41 +1,26 @@
-import pygame
+from tkinter import *
 import sys
 sys.path.insert(0,"..")
-from Models.button import Button
+# from Models.button import Button
+from Models.Map import map
 
-#initialize pygame import for use
-pygame.init()
+root = Tk()
 
-#screen setup for game
-width, height = 1080, 1080
-screen = pygame.display.set_mode((width, height))
-fps = 60
-fpsClock = pygame.time.Clock()
+root.geometry('1080x1080')
 
-#font for game
-font = pygame.font.SysFont('Arial', 40)
+map = map('bob')
+x, y = 0, 0
+i = 0
+for k, v in map.territories.items():
+# for k in range(5):
+    if (i % 20) == 0:
+        x += 250
+        y = 0
+    else:
+        y += 35
 
-#territories list
-territories = []
-
-#action for when button/territory is pressed
-def myFunction():
-    print('Button Pressed')
-
-alaska = Button(30, 30, 400, 100, 'Alaska', myFunction, False, font)
-NWTerritory = Button(30, 250, 400, 100, 'North Western Territory', myFunction, False, font)
-
-territories.append(alaska)
-territories.append(NWTerritory)
-
-#keep game open and iterate through territories to process changes
-while True:
-    screen.fill((20, 20, 20))
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-    for object in territories:
-        object.process(screen)
-    pygame.display.flip()
-    fpsClock.tick(fps)
+    i += 1
+    print(k)
+    Button(root, text = str(k), bd = '5',
+						command = root.destroy).place(x=x, y=y)
+root.mainloop()
