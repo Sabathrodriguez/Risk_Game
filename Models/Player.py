@@ -11,3 +11,6 @@ class Player:
     
     def attack(self, fromTerritory, toTerritory):
         print("attacking")
+    
+    def __str__(self):
+        return self.label

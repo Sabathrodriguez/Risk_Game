@@ -138,12 +138,12 @@ class map:
             self.territories[fromTerritory].adjacentTerritories.append(self.territories[el])
 
 
-mp = map(['bob'])
-for k in mp.territories.keys():    
-    if len(mp.territories[k].adjacentTerritories) > 0:
-        print(k, end='->')
-        for v in mp.territories[k].adjacentTerritories:
-            print(v, end=", ")
-        print()
+# mp = map(['bob'])
+# for k in mp.territories.keys():    
+#     if len(mp.territories[k].adjacentTerritories) > 0:
+#         print(k, end='->')
+#         for v in mp.territories[k].adjacentTerritories:
+#             print(v, end=", ")
+#         print()
 # for territory in mp.territories:
 #     print(territory)   

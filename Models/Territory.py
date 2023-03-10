@@ -9,6 +9,7 @@ class Territory:
         self.numberOfTroops = 0
         self.adjacentTerritories = []
         self.continent = continent
+        self.selected = False
         
     def __str__(self) -> str:
         return self.label + ": " + self.continent
