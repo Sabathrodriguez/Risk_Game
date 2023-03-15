@@ -62,7 +62,7 @@ class Game:
         #player 1
         if self.currentPlayer == self.players[0]:
             if self.phase == 'deploy':
-                print('deploy phase')
+                # print('deploy phase')
                 #cannot change to attack phase until all troops have been deployed
                 if self.currentPlayer.troopsAvailable == 0 or self.deployed == True:
                     self.phase = 'attack'
@@ -77,7 +77,7 @@ class Game:
                         self.map.territories[territory].player = self.currentPlayer.label
                         self.buttonMap[territory].configure(text= territory + " " + str(self.map.territories[territory].numberOfTroops)+ '\n' +self.map.territories[territory].player)
             elif self.phase == 'attack': 
-                print('attack phase')                           
+                # print('attack phase')                           
                 #iterate through territories player owns
                 playerOwnedTerritories = ''
                 for k, v in self.map.territories.items():
@@ -92,8 +92,8 @@ class Game:
 
                 self.labelMap['territoriesToAttack'].configure(text='territories available to attack from: \n' + playerOwnedTerritories)
                 #change from attack to deploy
-                if self.attacked or self.turns == 0:   
-                    print('1-1')             
+                if self.attacked or self.turns <= 1:   
+                    # print('1-1')             
                     self.phase = 'deploy'                
                     #after you're done attacking and changed to the next player, give the current player 15 new armies
                     self.currentPlayer = self.players[1] 
@@ -103,35 +103,35 @@ class Game:
                         self.currentPlayer.troopsAvailable += 15
                     self.turns += 1
                 else:
-                    print('1-2')
+                    # print('1-2')
                     #attack one of the available territories
                     #pick a territory to attack from
-                    if self.turns > 0:
-                        print('1-3')
+                    if self.turns > 1:
+                        # print('1-3')
                         if self.attackingTerritory is not None:                               
                             self.labelMap['attackingTerritoryLabel'].configure(text='attacking territory: ' + str(self.attackingTerritory))                         
                             if self.attackedTerritory is not None:        
                                 self.labelMap['attackedTerritoryLabel'].configure(text='territory being attacked: ' + str(self.attackedTerritory))
-                                print('1-6')                        
+                                # print('1-6')                        
                                 if self.attackingTerritory.numberOfTroops > self.attackedTerritory.numberOfTroops:
-                                    print('1-7')
+                                    # print('1-7')
                                     self.attackedTerritory.numberOfTroops = 0
                                     self.buttonMap[territory].configure(text= territory + " " + str(1)+ '\n' + self.currentPlayer.label)   
                                     self.attackedTerritory.player = self.currentPlayer                                 
                                     
                                 self.buttonMap['phaseButton'].configure(text= 'Deploy Phase')
                             else: 
-                                print('1-5')
-                                print('territories avail to attack: ' + str(availableTerritoriesToAttack))
+                                # print('1-5')
+                                # print('territories avail to attack: ' + str(availableTerritoriesToAttack))
                                 if self.map.territories[territory] in availableTerritoriesToAttack:                                    
                                     self.attackedTerritory = self.map.territories[territory]
-                                    print('attacked terr: ' + self.attackedTerritory.label)
+                                    # print('attacked terr: ' + self.attackedTerritory.label)
                         else:
-                            print('1-4')
+                            # print('1-4')
                             self.attackingTerritory = self.map.territories[territory]
-                            print('terr: ' + territory)
-                            print('attacking terr: ' + self.attackingTerritory.label)
-                        print('attack')
+                            # print('terr: ' + territory)
+                            # print('attacking terr: ' + self.attackingTerritory.label)
+                        # print('attack')
 
         #player 2
         else:
@@ -146,29 +146,30 @@ class Game:
                         self.buttonMap['phaseButton'].configure(text= 'Attack Phase')
                 else:
                     if len(self.map.territories[territory].player) == 0 or self.currentPlayer.label == self.map.territories[territory].player:
-                        print('no player: ' + str(len(self.map.territories[territory].player) == 0))
-                        print('is same player: ' + str(self.currentPlayer.label == self.map.territories[territory].player))
                         self.currentPlayer.troopsAvailable -= 1
                         self.map.territories[territory].numberOfTroops += 1
                         self.map.territories[territory].player = self.currentPlayer.label
                         self.buttonMap[territory].configure(text= territory + " " + str(self.map.territories[territory].numberOfTroops)+ '\n' +self.map.territories[territory].player)
             elif self.phase == 'attack': 
                 print('attack phase')                           
-                #iterate through territories player owns
+                #iterate through territories player owns and append territories that they're able to attack
                 playerOwnedTerritories = ''
                 for k, v in self.map.territories.items():
                     if self.map.territories[k].player == self.currentPlayer.label:
                         playerOwnedTerritories += k  + ' -> '
                         for t in self.map.territories[k].adjacentTerritories:
                             if t.player == self.enemy.label:
+                            # print('t: ' + t.label + 't.player: ' + t.player + ", " + self.enemy.label)                            
                                 playerOwnedTerritories += t.label + ', '
                                 availableTerritoriesToAttack.append(t)
                         playerOwnedTerritories += '\n'
 
+                #change label that shows which territories are able to attack
                 self.labelMap['territoriesToAttack'].configure(text='territories available to attack from: \n' + playerOwnedTerritories)
-                #change from attack to deploy
-                if self.attacked or self.turns == 0:   
-                    print('1')             
+                
+                #change from attack to deploy if attack phase is done
+                if self.attacked or self.turns <= 1:   
+                    # print('1-1')             
                     self.phase = 'deploy'                
                     #after you're done attacking and changed to the next player, give the current player 15 new armies
                     self.currentPlayer = self.players[0] 
@@ -177,48 +178,67 @@ class Game:
                     if self.turns > 0:
                         self.currentPlayer.troopsAvailable += 15
                     self.turns += 1
+
+                #attack phase is not done
                 else:
-                    print('2')
+                    # print('1-2')
                     #attack one of the available territories
                     #pick a territory to attack from
-                    if self.turns > 0:
-                        print('3')
-                        if self.attackingTerritory is not None:                            
-                            if self.attackedTerritory is not None:                                
+                    if self.turns > 1:
+                        # print('1-3')
+                        if self.attackingTerritory is not None:                               
+                            self.labelMap['attackingTerritoryLabel'].configure(text='attacking territory: ' + str(self.attackingTerritory))                         
+                            if self.attackedTerritory is not None:        
+                                self.labelMap['attackedTerritoryLabel'].configure(text='territory being attacked: ' + str(self.attackedTerritory))
+                                # print('1-6')                        
                                 if self.attackingTerritory.numberOfTroops > self.attackedTerritory.numberOfTroops:
+                                    # print('1-7')
                                     self.attackedTerritory.numberOfTroops = 0
-                                    self.buttonMap[territory].configure(text= territory + " " + str(1)+ '\n' + self.currentPlayer.label)
+                                    self.buttonMap[territory].configure(text= territory + " " + str(1)+ '\n' + self.currentPlayer.label)   
+                                    self.attackedTerritory.player = self.currentPlayer                                 
                                     
-                                self.attacked = True
-                                self.deployed = False
-                                self.attackedTerritory = None
-                                self.attackingTerritory = None
                                 self.buttonMap['phaseButton'].configure(text= 'Deploy Phase')
-                            else:
+                            else: 
+                                # print('1-5')
+                                # print('territories avail to attack: ' + str(availableTerritoriesToAttack))
                                 if self.map.territories[territory] in availableTerritoriesToAttack:                                    
                                     self.attackedTerritory = self.map.territories[territory]
-                                    print('attacked terr: ' + self.attackedTerritory.label)
+                                    # print('attacked terr: ' + self.attackedTerritory.label)
                         else:
-                            print('4')
+                            # print('1-4')
                             self.attackingTerritory = self.map.territories[territory]
-                            print('terr: ' + territory)
-                            print('attacking terr: ' + self.attackingTerritory.label)
-                        print('attack')
+                            # print('terr: ' + territory)
+                            # print('attacking terr: ' + self.attackingTerritory.label)
+                        # print('attack')
+
 
     def isDoneAttacking(self):
-        print('1-8')                       
+
+        self.phase = 'deploy'                
+        #after you're done attacking and changed to the next player, give the current player 15 new armies
+        self.labelMap['playersTurn'].configure(text= self.currentPlayer.label + " turn")
+
+        # print('1-8')                       
         self.attacked = True
         self.isDoneAttackingPressed = False
         
         if self.currentPlayer == self.player1:
+            # print('changing to player 2')
             self.currentPlayer = self.player2
+            self.enemy = self.player1
         else:
+            # print('changing to player 1')
             self.currentPlayer = self.player1
+            self.enemy = self.player2
         # self.map.territories[territory].player = self.currentPlayer.label
         self.deployed = False
         self.attackedTerritory = None
         self.attackingTerritory = None
         self.isDoneAttackingPressed = True        
+
+        if self.turns > 0:
+            self.currentPlayer.troopsAvailable += 15
+        self.turns += 1
     
     def startGame(self):          
         for k, v in self.map.territories.items():
