@@ -119,11 +119,10 @@ class Game:
                                 # print('territories avail to attack: ' + str(availableTerritoriesToAttack))
                                 if self.map.territories[territory] in availableTerritoriesToAttack:                                    
                                     self.attackedTerritory = self.map.territories[territory]
-                                    # print('attacked terr: ' + self.attackedTerritory.label)
+
                         else:
                             #if territory clicked is a territory that the current player owns, then we can attack from it
                             if self.map.territories[territory].label in playerOwnedTerritoriesList:
-                                print(playerOwnedTerritories)
                                 self.attackingTerritory = self.map.territories[territory]
 
         #player 2
@@ -147,16 +146,20 @@ class Game:
                 print('attack phase')                           
                 #iterate through territories player owns and append territories that they're able to attack
                 playerOwnedTerritories = ''
+                #TODO: For some reason North Western Territory isn't showing up as an adjacent territory to Greenland
                 for k, v in self.map.territories.items():
                     if self.map.territories[k].player == self.currentPlayer.label:
+                        print('player owned territory: ' + str(k), end=', ')
                         playerOwnedTerritories += k  + ' -> '
                         playerOwnedTerritoriesList.append(k)
                         for t in self.map.territories[k].adjacentTerritories:
-                            if t.player == self.enemy.label:
-                            # print('t: ' + t.label + 't.player: ' + t.player + ", " + self.enemy.label)                            
+                            if t.player is not self.currentPlayer.label:                                
+                                availableTerritoriesToAttack.append(t.label)
+                            else:
                                 playerOwnedTerritories += t.label + ', '
-                                availableTerritoriesToAttack.append(t)
                         playerOwnedTerritories += '\n'
+
+                print('adjacent territorites: ' + str(availableTerritoriesToAttack))
 
                 #change label that shows which territories are able to attack
                 self.labelMap['territoriesToAttack'].configure(text='territories available to attack from: \n' + playerOwnedTerritories)
@@ -177,11 +180,10 @@ class Game:
                     #attack one of the available territories
                     #pick a territory to attack from
                     if self.turns > 1:
-                        # print('1-3')
                         if self.attackingTerritory is not None:                               
                             self.labelMap['attackingTerritoryLabel'].configure(text='attacking territory: ' + str(self.attackingTerritory))                         
-                            if self.attackedTerritory is not None:        
-                                self.labelMap['attackedTerritoryLabel'].configure(text='territory being attacked: ' + str(self.attackedTerritory))
+                            if self.attackedTerritory is not None:   
+                                self.labelMap['attackedTerritoryLabel'].configure(text='territory being attacked: 2 ' + str(self.attackedTerritory))
 
                                 #check if current player has more troops than enemy player, if so, adjust territory accordingly
                                 if self.attackingTerritory.numberOfTroops > self.attackedTerritory.numberOfTroops and self.map.territories[territory].player is not self.currentPlayer.label:
@@ -191,7 +193,9 @@ class Game:
                                     
                                 self.buttonMap['phaseButton'].configure(text= 'Deploy Phase')
                             else: 
-                                if self.map.territories[territory] in availableTerritoriesToAttack:                                    
+                                #if territory clicked is territory that is adjacent to attacking territory then allow it to be the
+                                #attacking territory
+                                if self.map.territories[territory].label in availableTerritoriesToAttack:        
                                     self.attackedTerritory = self.map.territories[territory]
                         else:
                             #if territory clicked is a territory that the current player owns, then we can attack from it
@@ -205,16 +209,13 @@ class Game:
         #after you're done attacking and changed to the next player, give the current player 15 new armies
         self.labelMap['playersTurn'].configure(text= self.currentPlayer.label + " turn")
 
-        # print('1-8')                       
         self.attacked = True
         self.isDoneAttackingPressed = False
         
         if self.currentPlayer == self.player1:
-            # print('changing to player 2')
             self.currentPlayer = self.player2
             self.enemy = self.player1
         else:
-            # print('changing to player 1')
             self.currentPlayer = self.player1
             self.enemy = self.player2
         # self.map.territories[territory].player = self.currentPlayer.label
