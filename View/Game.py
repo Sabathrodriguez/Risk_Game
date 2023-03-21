@@ -5,12 +5,13 @@ sys.path.insert(0,"..")
 from Models.Map import map
 from Models.Player import Player
 from functools import partial
+import random
 
 class Game:
     
     def __init__(self):
-        self.player1 = Player('Player 1', 40)
-        self.player2 = Player('Player 2', 40)
+        self.player1 = Player('Player 1', 0)
+        self.player2 = Player('Player 2', 0)
 
         self.players = [self.player1, self.player2]
 
@@ -81,13 +82,15 @@ class Game:
                 playerOwnedTerritories = ''
                 for k, v in self.map.territories.items():
                     if self.map.territories[k].player == self.currentPlayer.label:
+                        print('player owned territory: ' + str(k), end=', ')
                         playerOwnedTerritories += k  + ' -> '
                         playerOwnedTerritoriesList.append(k)
                         for t in self.map.territories[k].adjacentTerritories:
-                            if t.player == self.enemy.label:
+                            if t.player is not self.currentPlayer.label:                                
+                                availableTerritoriesToAttack.append(t.label)
+                            else:
                                 playerOwnedTerritories += t.label + ', '
-                                availableTerritoriesToAttack.append(t)
-                        playerOwnedTerritories += '\n'
+                        playerOwnedTerritories += '\n'      
 
                 self.labelMap['territoriesToAttack'].configure(text='territories available to attack from: \n' + playerOwnedTerritories)
                 #change from attack to deploy
@@ -117,7 +120,7 @@ class Game:
                                 self.buttonMap['phaseButton'].configure(text= 'Deploy Phase')
                             else: 
                                 # print('territories avail to attack: ' + str(availableTerritoriesToAttack))
-                                if self.map.territories[territory] in availableTerritoriesToAttack:                                    
+                                if self.map.territories[territory].label in availableTerritoriesToAttack:                                    
                                     self.attackedTerritory = self.map.territories[territory]
 
                         else:
@@ -146,7 +149,6 @@ class Game:
                 print('attack phase')                           
                 #iterate through territories player owns and append territories that they're able to attack
                 playerOwnedTerritories = ''
-                #TODO: For some reason North Western Territory isn't showing up as an adjacent territory to Greenland
                 for k, v in self.map.territories.items():
                     if self.map.territories[k].player == self.currentPlayer.label:
                         print('player owned territory: ' + str(k), end=', ')
@@ -228,22 +230,50 @@ class Game:
             self.currentPlayer.troopsAvailable += 15
         self.turns += 1
     
-    def startGame(self):          
+    def startGame(self):                  
+
+        #turn map into list of keys and values
+        territoryList = list(self.map.territories.items())
+
+        #initial number of armies to spread
+        player1Armies = 40
+        player2Armies = 40
+
+        #alternate between players
+        flag = False
+
+        #randomly initialize armies in territories
+        for i in range(len(territoryList)):
+            randomTerritory = territoryList.pop(random.randrange(len(territoryList)))
+            if flag:
+                randomNumArmies1 = random.randint(0, player1Armies)
+                player1Armies -= randomNumArmies1
+                self.map.territories[randomTerritory[0]].numberOfTroops = randomNumArmies1
+                self.map.territories[randomTerritory[0]].player = self.player1.label
+                flag = False
+            else:
+                randomNumArmies2 = random.randint(0, player2Armies)
+                player2Armies -= randomNumArmies2
+                self.map.territories[randomTerritory[0]].numberOfTroops = randomNumArmies2
+                self.map.territories[randomTerritory[0]].player = self.player2.label
+                flag = True
+
+
+        #initialize territories
         for k, v in self.map.territories.items():
-        # for k in range(5):
             if (self.i % 10) == 0:
                 self.x += 200
                 self.y = 0
             else:
-                self.y += 35
+                self.y += 35            
 
             self.i += 1
             t = Button(self.root, text = str(k) + " " + str(self.map.territories[k].numberOfTroops) + '\n' +self.map.territories[k].player, height=2, width=18, bd = '2', command = partial(self.selectTerritory, k))
             t.place(x=self.x, y=self.y)
             t['font'] = self.myFont
-            self.buttonMap[k] = t
+            self.buttonMap[k] = t        
 
-
+        #initialize buttons
         phase = Button(self.root, text = 'Deploy Phase', height= 2, width= 18, bd= '2', command=(self.nextPhase))
         phase.place(x=100, y=400)
         self.buttonMap['phaseButton'] = phase
@@ -251,10 +281,6 @@ class Game:
         isDoneAttacking = Button(self.root, text='press if done attacking', height=2, width= 18, command=(self.isDoneAttacking))
         isDoneAttacking.place(x=100, y=500)
         self.buttonMap['isDoneAttacking'] = isDoneAttacking
-
-        territoriesToAttack = Label(self.root, text= '')
-        territoriesToAttack.place(x=1080/2, y=400)
-        self.labelMap['territoriesToAttack'] = territoriesToAttack        
 
         playersTurn = Label(self.root, text= self.currentPlayer.label + ' turn')
         playersTurn.place(x=1080/2, y=350)
