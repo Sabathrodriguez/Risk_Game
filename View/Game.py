@@ -19,7 +19,7 @@ class Game:
 
         self.root = Tk()
 
-        self.root.geometry('1080x1080')
+        self.root.geometry('1440x1080')
 
         self.myFont = font.Font(size=8)
 
@@ -55,11 +55,8 @@ class Game:
         top.title("phase")
         Label(top, text= text, font=('Mistral 18 bold')).place(x=150,y=80)
 
-
-    #TODO: fix bug the allows attacking player to continue taking over territories after winning a battle
     def selectTerritory(self, territory):    
         
-        print(territory + ": " + str(self.currentPlayer) + ", " + str(self.currentPlayer.troopsAvailable) + ", " + str(self.map.territories[territory].numberOfTroops))
         availableTerritoriesToAttack = []
         playerOwnedTerritoriesList = []
         
@@ -75,11 +72,9 @@ class Game:
         #player 2
         else:
             if self.phase == 'deploy':
-                print('deploy phase')
                 #cannot change to attack phase until all troops have been deployed
                 self.deployPhase(territory)
             elif self.phase == 'attack': 
-                print('attack phase')                           
                 #iterate through territories player owns and append territories that they're able to attack
                 self.attackPhase(self.currentPlayer, playerOwnedTerritoriesList, availableTerritoriesToAttack, territory)
 
@@ -96,7 +91,6 @@ class Game:
         else:
             self.currentPlayer = self.player1
             self.enemy = self.player2
-        # self.map.territories[territory].player = self.currentPlayer.label
         self.deployed = False
         self.attackedTerritory = None
         self.attackingTerritory = None
@@ -134,19 +128,199 @@ class Game:
                 if player2Armies > 0 and randomNumArmies2 > 0:
                     self.map.territories[randomTerritory[0]].numberOfTroops = randomNumArmies2
                     self.map.territories[randomTerritory[0]].player = self.player2.label
-                flag = True
+                flag = True        
 
+        #sort territories in map
+        myKeys = list(self.map.territories.keys())
+        myKeys.sort()
+        sorted_dict = {i: self.map.territories[i] for i in myKeys}
+        self.map.territories = sorted_dict
 
-        #initialize territories
+        #initialize territories        
         for k, v in self.map.territories.items():
-            if (self.i % 10) == 0:
-                self.x += 200
+            h = 2
+            w = 18
+            if k == 'ALASKA':
+                self.x = 0
                 self.y = 0
-            else:
-                self.y += 35            
+                w = 6
+            elif k == 'NORTH WESTERN TERRITORY':
+                self.x = 80
+                self.y = 0
+            elif k == 'GREENLAND':
+                self.x = 230
+                self.y = 0
+                w = 8
+            elif k == 'ICELAND':
+                self.x = 420
+                self.y = 0
+                w = 6
+            elif k == 'SCANDINAVIA':
+                self.x = 500
+                self.y = 0
+                w = 10
+            elif k == 'SIBERIA':
+                self.x = 840
+                self.y = 0
+                w = 6
+            elif k == 'YAKUTSK':
+                self.x = 930
+                self.y = 0
+                w = 6
+            elif k == 'KAMCHATKA':
+                self.x = 1010
+                self.y = 0
+                w = 8
+            #-----------------------------#
+            elif k == 'ALBERTA':
+                self.x = 0
+                self.y = 30
+                w = 6
+            elif k == 'ONTARIO':
+                self.x = 80
+                self.y = 30
+                w = 6
+            elif k == 'QUEBEC':
+                self.x = 160
+                self.y = 30
+                w = 6
+            elif k == 'GREAT BRITAIN':
+                self.x = 420
+                self.y = 30
+                w = 10
+            elif k == 'NORTHERN EUROPE':
+                self.x = 520
+                self.y = 30
+                w = 14
+            elif k == 'UKRAINE':
+                self.x = 650
+                self.y = 30
+                w = 6
+            elif k == 'URAL':
+                self.x = 840
+                self.y = 30
+                w = 4
+            elif k == 'IRKUTSK':
+                self.x = 910
+                self.y = 30
+                w = 8
+            elif k == 'MONGOLIA':
+                self.x = 1000
+                self.y = 30
+                w = 8
+            elif k == 'JAPAN':
+                self.x = 1090
+                self.y = 30
+                w = 6
+            #-----------------------------#
+            elif k == 'WESTERN UNITED STATES':
+                self.x = 0
+                self.y = 60
+
+            elif k == 'EASTERN UNITED STATES':
+                self.x = 140
+                self.y = 60
+            elif k == 'AFGHANISTAN':
+                self.x = 840
+                self.y = 60
+                w = 8
+            elif k == 'CHINA':
+                self.x = 940
+                self.y = 60
+                w = 4
+            #-----------------------------#
+            elif k == 'CENTRAL AMERICA':
+                self.x = 0
+                self.y = 90
+                w = 12
+            elif k == 'WESTERN EUROPE':
+                self.x = 420
+                self.y = 90
+                w = 12
+            elif k == 'SOUTHERN EUROPE':
+                self.x = 540
+                self.y = 90
+                w = 12
+            elif k == 'MIDDLE EAST':
+                self.x = 840
+                self.y = 90
+                w = 8
+            elif k == 'INDIA':
+                self.x = 930
+                self.y = 90
+                w = 4
+            elif k == 'SLAM':
+                self.x = 1000
+                self.y = 90
+                w = 4
+            #-----------------------------#
+            elif k == 'VENEZUELA':
+                self.x = 0
+                self.y = 120
+                w = 8
+            elif k == 'NORTH AFRICA':
+                self.x = 540
+                self.y = 120
+                w = 10
+            elif k == 'EGYPT':
+                self.x = 640
+                self.y = 120
+                w = 6
+            elif k == 'INDONESIA':
+                self.x = 930
+                self.y = 120
+                w = 10
+            elif k == 'NEW GUINEA':
+                self.x = 1200
+                self.y = 120
+                w = 10
+            #-----------------------------#
+            elif k == 'BRAZIL':
+                self.x = 200
+                self.y = 150
+                w = 6
+            elif k == 'CONGO':
+                self.x = 540
+                self.y = 150
+                w = 4
+            elif k == 'EAST AFRICA':
+                self.x = 640
+                self.y = 150
+                w = 8
+            elif k == 'WESTERN AUSTRALIA':
+                self.x = 930
+                self.y = 150
+                w = 16
+            elif k == 'EASTERN AUSTRALIA':
+                self.x = 1200
+                self.y = 150
+                w = 16
+            #-----------------------------#
+            elif k == 'PERU':
+                self.x = 0
+                self.y = 180
+                w = 4
+            elif k == 'SOUTH AFRICA':
+                self.x = 540
+                self.y = 180
+                w = 10
+            elif k == 'MADAGASCAR':
+                self.x = 640
+                self.y = 180
+                w = 8
+            #-----------------------------#
+            elif k == 'ARGENTINA':
+                self.x = 0
+                self.y = 210
+                w = 8
+            # if (self.i % 10) == 0:
+            #     self.x += 200
+            #     self.y = 0
+            # else:
+            #     self.y += 35            
 
             self.i += 1
-            t = Button(self.root, text = str(k) + " " + str(self.map.territories[k].numberOfTroops) + '\n' +self.map.territories[k].player, height=2, width=18, bd = '2', command = partial(self.selectTerritory, k))
+            t = Button(self.root, text = str(k) + " " + str(self.map.territories[k].numberOfTroops) + '\n' + (self.map.territories[k].player if self.map.territories[k].player is not None else ''), height=h, width=w, bd = '2', command = partial(self.selectTerritory, k))
             t.place(x=self.x, y=self.y)
             t['font'] = self.myFont
             self.buttonMap[k] = t        
@@ -175,16 +349,17 @@ class Game:
         self.attackedTerritory = None
         self.attackingTerritory = None
 
-    def attackPhase(self, player, playerOwnedTerritoriesList, availableTerritoriesToAttack, territory):
+    def attackPhase(self, player, playerOwnedTerritoriesList, adjacentTerritories, territory):
         playerOwnedTerritories = ''
+        #iterate through all territories in map
         for k, v in self.map.territories.items():
             if self.map.territories[k].player == self.currentPlayer.label:
-                print('player owned territory: ' + str(k), end=', ')
                 playerOwnedTerritories += k  + ' -> '
                 playerOwnedTerritoriesList.append(k)
+                #iterate through all territories adjacent to k
                 for t in self.map.territories[k].adjacentTerritories:
-                    if t.player is not self.currentPlayer.label:                                
-                        availableTerritoriesToAttack.append(t.label)
+                    if self.map.territories[t.label].player is not self.currentPlayer.label:                            
+                        adjacentTerritories.append(t.label)
                     else:
                         playerOwnedTerritories += t.label + ', '
                 playerOwnedTerritories += '\n'      
@@ -196,14 +371,51 @@ class Game:
                 self.labelMap['attackedTerritoryLabel'].configure(text='territory being attacked: ' + str(self.attackedTerritory))
                 #check if current player has more troops than enemy player, if so, adjust territory accordingly
                 if self.attackingTerritory.numberOfTroops > self.attackedTerritory.numberOfTroops and self.map.territories[territory].player is not self.currentPlayer.label:
-                    self.attackedTerritory.numberOfTroops = 0
+                    self.attackedTerritory.numberOfTroops = 1
                     self.buttonMap[territory].configure(text= territory + " " + str(1)+ '\n' + self.currentPlayer.label)   
-                    self.attackedTerritory.player = self.currentPlayer                                 
+                    self.attackingTerritory.numberOfTroops -= 1
+                    self.attackedTerritory.player = self.currentPlayer
+                    self.attackingTerritory = None
+                    self.attackedTerritory = None
+                    
+                    #add territory to players territory list and remove from opponents
+                    if self.currentPlayer == self.player1:
+                        self.player1.territories.append(territory)
+                        index = self.player2.territories.index(territory)
+                        self.player2.territories.pop(index)  
+                    else:
+                        self.player2.territories.append(territory)
+                        index = self.player1.territories.index(territory)                              
+                        self.player1.territories.pop(index)
                     
             else: 
-                # print('territories avail to attack: ' + str(availableTerritoriesToAttack))
-                if self.map.territories[territory].label in availableTerritoriesToAttack:                                    
-                    self.attackedTerritory = self.map.territories[territory]
+                #we need to make sure that the territory being chosen to be attacked
+                #isn't owned by the same player or empty.
+                if self.map.territories[territory].label in adjacentTerritories:
+                    canAdd = True
+                    #iterate through all territories player1 owns
+                    #and if they already own the property dont attack  
+                    
+                    #player1
+                    if self.currentPlayer == self.player1:                      
+                        for t in self.player1.territories:
+                            if territory == t:
+                                canAdd = False
+                                break
+                    #player2
+                    else:                      
+                        for t in self.player2.territories:
+                            if territory == t:
+                                canAdd = False
+                                break
+
+                    #check if territory is empty, if it is then we can't attack
+                    #otherwise, we can
+                    if self.map.territories[territory].player is None:
+                        canAdd = False
+                    
+                    if canAdd == True:
+                        self.attackedTerritory = self.map.territories[territory]
 
         else:
             #if territory clicked is a territory that the current player owns, then we can attack from it
@@ -216,11 +428,11 @@ class Game:
             self.attacked = False
 
         else:
-            if len(self.map.territories[territory].player) == 0 or self.currentPlayer.label == self.map.territories[territory].player:
-                print('DEPLOY PHASE')
+            if self.map.territories[territory].player is None or self.currentPlayer.label == self.map.territories[territory].player:
                 self.currentPlayer.troopsAvailable -= 1
                 self.map.territories[territory].numberOfTroops += 1
                 self.map.territories[territory].player = self.currentPlayer.label
+                self.currentPlayer.territories.append(territory)
                 self.buttonMap[territory].configure(text= territory + " " + str(self.map.territories[territory].numberOfTroops)+ '\n' +self.map.territories[territory].player)
 
 newGame = Game()
