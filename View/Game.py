@@ -137,9 +137,11 @@ class Game:
         myKeys.sort()
         sorted_dict = {i: self.map.territories[i] for i in myKeys}
         self.map.territories = sorted_dict
+        territoryToLocation = {}
 
         #initialize territories        
         for k, v in self.map.territories.items():
+            #misc. alignment variables
             h = 2
             w = 18
             z = 50
@@ -153,205 +155,219 @@ class Game:
             if k == 'ALASKA':
                 self.x = 0
                 self.y = 0
+                territoryToLocation['ALASKA'] = [10, 10]
                 w = 6
             elif k == 'NORTH WESTERN TERRITORY':
                 self.x = 80 + f
                 self.y = 0
-                #alaska to north western territory
-                self.canvas.create_line(10, 10, 80 + f, 10, width=2)
+                territoryToLocation['NORTH WESTERN TERRITORY'] = [80 + f, 10]
             elif k == 'GREENLAND':
                 self.x = 230 + 2*f
                 self.y = 0
+                territoryToLocation['GREENLAND'] = [230 + 2*f, 10]
                 w = 8
-                #north western tetrritory to greenland
-                self.canvas.create_line(80 + f, 10, 230 + 2*f, 10, width=2)
             elif k == 'ICELAND':
                 self.x = 420 + 3*f
                 self.y = 0
+                territoryToLocation['ICELAND'] = [420 + 3*f, 10]
                 w = 6
-                #greenland to iceland
-                self.canvas.create_line(230 + 2*f, 10, 420 + 3*f, 10, width=2)
             elif k == 'SCANDINAVIA':
                 self.x = 500 + 4*f
                 self.y = 0
+                territoryToLocation['SCANDINAVIA'] = [500 + 4*f, 10]
                 w = 10
             elif k == 'SIBERIA':
                 self.x = 840 + 5*f
                 self.y = 0
+                territoryToLocation['SIBERIA'] = [840 + 5*f, 10]
                 w = 6
             elif k == 'YAKUTSK':
                 self.x = 930 + 6*f
                 self.y = 0
+                territoryToLocation['YAKUTSK'] = [930 + 6*f, 10]
                 w = 6
             elif k == 'KAMCHATKA':
                 self.x = 1010 + 7*f
                 self.y = 0
+                territoryToLocation['KAMCHATKA'] = [1010 + 7*f, 10]
                 w = 8
             #-----------------------------#
             elif k == 'ALBERTA':
                 self.x = 0
                 self.y = 30 + t
+                territoryToLocation['ALBERTA'] = [10, 30 + t]
                 w = 6
-                #alaska to alberta
-                self.canvas.create_line(10, 10, 10, 30 + t, width=2)
-                #north western territory to alberta
-                self.canvas.create_line(80 + f, 10, 50, 30 + t, width=2)
             elif k == 'ONTARIO':
                 self.x = 80 + f
                 self.y = 30 + t
+                territoryToLocation['ONTARIO'] = [80 + f, 30 + t]
                 w = 6
-                #north western territory to ontario
-                self.canvas.create_line(100 + f, 10, 100 + f, 30 + t, width=2)
-                #greenland to ontario                
-                self.canvas.create_line(230 + 2*f, 10, 100 + f, 30 + t, width=2, fill='red')
             elif k == 'QUEBEC':
                 self.x = 160 + 2*f
                 self.y = 30 + t
+                territoryToLocation['QUEBEC'] = [160 + 2*f, 30 + t]
                 w = 6
-                #greenland to quebec
-                self.canvas.create_line(230 + 2*f, 10, 190 + 2*f, 30 + t, width=2)
             elif k == 'GREAT BRITAIN':
                 self.x = 420 + 3*f
                 self.y = 30 + t
+                territoryToLocation['GREAT BRITAIN'] = [420 + 3*f, 30+t]
                 w = 10
             elif k == 'NORTHERN EUROPE':
                 self.x = 520 + 4*f
                 self.y = 30 + t
+                territoryToLocation['NORTHERN EUROPE'] = [520 + 4*f, 30 + t]
                 w = 14
             elif k == 'UKRAINE':
                 self.x = 650 + 5*f
                 self.y = 30 + t
+                territoryToLocation['UKRAINE'] = [650+5*f, 30+t]
                 w = 6
             elif k == 'URAL':
                 self.x = 840 + 6*f
                 self.y = 30 + t
+                territoryToLocation['URAL'] = [840 + 6*f, 30 + t]
                 w = 4
             elif k == 'IRKUTSK':
                 self.x = 910 + 7*f
                 self.y = 30 + t
+                territoryToLocation['IRKUTSK'] = [910+7*f, 30+t]
                 w = 8
             elif k == 'MONGOLIA':
                 self.x = 1000 + 8*f
                 self.y = 30 + t
+                territoryToLocation['MONGOLIA'] = [1000+8*f, 30+t]
                 w = 8
             elif k == 'JAPAN':
                 self.x = 1090 + 9*f
                 self.y = 30 + t
+                territoryToLocation['JAPAN'] = [1090 + 9*f, 30 + t]
                 w = 6
             #-----------------------------#
             elif k == 'WESTERN UNITED STATES':
                 self.x = 0
                 self.y = 60 + t + a
-
+                territoryToLocation['WESTERN UNITED STATES'] = [10, 60 + t + a]
             elif k == 'EASTERN UNITED STATES':
                 self.x = 140 + f
                 self.y = 60 + t + a
+                territoryToLocation['EASTERN UNITED STATES'] = [140+f, 60+t+a]
             elif k == 'WESTERN EUROPE':
                 self.x = 420 + 2*f
                 self.y = 60 + t + a
+                territoryToLocation['WESTERN EUROPE'] = [420+2*f, 60+t+a]
                 w = 12
             elif k == 'SOUTHERN EUROPE':
                 self.x = 540 + 3*f
                 self.y = 60 + t + a
+                territoryToLocation['SOUTHERN EUROPE'] = [540+3*f, 60+t+a]
                 w = 12
             elif k == 'AFGHANISTAN':
                 self.x = 840 + 4*f
                 self.y = 60 + t + a
+                territoryToLocation['AFGHANISTAN'] = [840+4*f, 60+t+a]
                 w = 8
             elif k == 'CHINA':
                 self.x = 940 + 5*f
                 self.y = 60 + t + a
+                territoryToLocation['CHINA'] = [940+5*f, 60+t+a]
                 w = 4
             #-----------------------------#
             elif k == 'CENTRAL AMERICA':
                 self.x = 0 
                 self.y = 90 + t + a + b
-                w = 12
-                self.canvas.create_line(10, 90 + t + a + b, 10, 120 + z + t + a + b, width=2)
-                self.canvas.pack()
+                territoryToLocation['CENTRAL AMERICA'] = [10, 90 + t + a + b]
+                w = 12   
             elif k == 'MIDDLE EAST':
                 self.x = 840 + f
                 self.y = 90 + t + a + b
+                territoryToLocation['MIDDLE EAST'] = [840 + f, 90 + t + a + b]
                 w = 8
+                #ukraine to middle east
             elif k == 'INDIA':
                 self.x = 930 + 2*f
                 self.y = 90 + t + a + b
+                territoryToLocation['INDIA'] = [930 + 2*f, 90 + t + a + b]
                 w = 4
             elif k == 'SLAM':
                 self.x = 1000 + 3*f
                 self.y = 90 + t + a + b
+                territoryToLocation['SLAM'] = [1000 + 3*f, 90 + t + a + b]
                 w = 4            
             #-----------------------------#            
             elif k == 'VENEZUELA':
                 self.x = 0
                 self.y = 120 + z + t + a + b
-                w = 8
+                territoryToLocation['VENEZUELA'] = [10, 120 + z + t + a + b]
+                w = 8                
             elif k == 'NORTH AFRICA':
                 self.x = 540 + f
                 self.y = 120 + z + t + a + b
-                #brazil to north africa
-                self.canvas.create_line(150, 150 + z + t + a + b + c, 540 + f, 130 + z + t + a + b, width=2)
+                territoryToLocation['NORTH AFRICA'] = [540 + f, 120 + z + t + a + b]                
                 w = 10
             elif k == 'EGYPT':
                 self.x = 640 + 2*f
                 self.y = 120 + z + t + a + b
+                territoryToLocation['EGYPT'] = [640 + 2*f, 120 + z + t + a + b]
                 w = 6
+                #southern europe to egypt
             elif k == 'INDONESIA':
                 self.x = 930 + 3*f
                 self.y = 120 + z + t + a + b
+                territoryToLocation['INDONESIA'] = [930 + 3*f, 120 + z + t + a + b]
                 w = 10
             elif k == 'NEW GUINEA':
                 self.x = 1100 + 4*f
                 self.y = 120 + z + t + a + b
+                territoryToLocation['NEW GUINEA'] = [1100 + 4*f, 120 + z + t + a + b]
                 w = 10
             #-----------------------------#
             elif k == 'BRAZIL':
                 self.x = 100
                 self.y = 150 + z + t + a + b + c
+                territoryToLocation['BRAZIL'] = [100, 150 + z + t + a + b + c]
                 w = 6
-                self.canvas.create_line(0, 120 + z + t + a + b, 100, 150 + z + t + a + b + c, width=2)
             elif k == 'CONGO':
                 self.x = 540 + f
                 self.y = 150 + z + t + a + b + c
+                territoryToLocation['CONGO'] = [540 + f, 150 + z + t + a + b + c]
                 w = 4
             elif k == 'EAST AFRICA':
                 self.x = 640 + 2*f
                 self.y = 150 + z + t + a + b + c
+                territoryToLocation['EAST AFRICA'] = [640 + 2*f, 150 + z + t + a + b + c]
                 w = 8
             elif k == 'WESTERN AUSTRALIA':
                 self.x = 930 + 3*f
                 self.y = 150 + z + t + a + b + c
+                territoryToLocation['WESTERN AUSTRALIA'] = [930 + 3*f, 150 + z + t + a + b + c]
                 w = 16
             elif k == 'EASTERN AUSTRALIA':
                 self.x = 1100 + 4*f
                 self.y = 150 + z + t + a + b + c
+                territoryToLocation['EASTERN AUSTRALIA'] = [1100 + 4*f, 150 + z + t + a + b + c]
                 w = 16
             #-----------------------------#
             elif k == 'PERU':
                 self.x = 0
                 self.y = 180 + z + t + a + b + c + d
-                w = 4
-                #venezuela to peru
-                self.canvas.create_line(10, 120 + z + t + a + b, 10, 180 + z + t + a + b + c + d, width=2)
-                #brazil to peru
-                self.canvas.create_line(100, 150 + z + t + a + b + c, 10, 180 + z + t + a + b + c + d, width=2)
+                territoryToLocation['PERU'] = [10, 180 + z + t + a + b + c + d]
+                w = 4                
             elif k == 'SOUTH AFRICA':
                 self.x = 540 + f
                 self.y = 180 + z + t + a + b + c + d
+                territoryToLocation['SOUTH AFRICA'] = [540 + f, 180 + z + t + a + b + c + d]
                 w = 10
             elif k == 'MADAGASCAR':
                 self.x = 640 + 2*f
                 self.y = 180 + z + t + a + b + c + d
+                territoryToLocation['MADAGASCAR'] = [640 + 2*f, 180 + z + t + a + b + c + d]
                 w = 8
             #-----------------------------#
             elif k == 'ARGENTINA':
                 self.x = 0
                 self.y = 210 + z + t + a + b + c + d + e
-                w = 8    
-                #peru to argentina
-                self.canvas.create_line(10, 180 + z + t + a + b + c + d, 10, 210 + z + t + a + b + c + d + e, width=2)
-                #brazil to argentina
-                self.canvas.create_line(100, 150 + z + t + a + b + c, 60, 210 + z + t + a + b + c + d + e, width=2)
+                territoryToLocation['ARGENTINA'] = [10, 210 + z + t + a + b + c + d + e]
+                w = 8             
 
             self.i += 1
             t = Button(self.root, text = str(k) + " " + str(self.map.territories[k].numberOfTroops) + '\n' + (self.map.territories[k].player if self.map.territories[k].player is not None else ''), height=h, width=w, bd = '2', command = partial(self.selectTerritory, k))
@@ -359,6 +375,14 @@ class Game:
             t['font'] = self.myFont
             self.buttonMap[k] = t        
 
+        #draw lines between territories        
+        #territory connecting from
+        for k, v in territoryToLocation.items():
+            #territory(ies) connecting to
+            for terr in self.map.territories[k].adjacentTerritories:
+                self.canvas.create_line(territoryToLocation[k][0], territoryToLocation[k][1], territoryToLocation[terr.label][0], territoryToLocation[terr.label][1], width=2)
+        
+        self.canvas.pack()
         #initialize buttons
         isDoneAttacking = Button(self.root, text='press if done attacking', height=2, width= 18, command=(self.isDoneAttacking))
         isDoneAttacking.place(x=100, y=500)
@@ -396,8 +420,7 @@ class Game:
                         adjacentTerritories.append(t.label)
                     else:
                         playerOwnedTerritories += t.label + ', '
-                playerOwnedTerritories += '\n'      
-
+                playerOwnedTerritories += '\n'              
         
         if self.attackingTerritory is not None:                               
             self.labelMap['attackingTerritoryLabel'].configure(text='attacking territory: ' + str(self.attackingTerritory))                         
