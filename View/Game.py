@@ -69,16 +69,17 @@ class Game:
                 self.deployPhase(territory)
             elif self.phase == 'attack': 
                 #iterate through territories player owns
-                self.attackPhase(self.currentPlayer, playerOwnedTerritoriesList, availableTerritoriesToAttack, territory)
+                self.attackPhase(playerOwnedTerritoriesList, availableTerritoriesToAttack, territory)
 
         #player 2
         else:
-            if self.phase == 'deploy':
+            # if self.phase == 'deploy':
                 #cannot change to attack phase until all troops have been deployed
-                self.deployPhase(territory)
-            elif self.phase == 'attack': 
+                # self.deployPhase(territory)
+            self.randomPlayer()
+            # elif self.phase == 'attack': 
                 #iterate through territories player owns and append territories that they're able to attack
-                self.attackPhase(self.currentPlayer, playerOwnedTerritoriesList, availableTerritoriesToAttack, territory)
+                # self.attackPhase(playerOwnedTerritoriesList, availableTerritoriesToAttack, territory)
 
     def isDoneAttacking(self):
 
@@ -407,7 +408,7 @@ class Game:
         self.attackedTerritory = None
         self.attackingTerritory = None
 
-    def attackPhase(self, player, playerOwnedTerritoriesList, adjacentTerritories, territory):
+    def attackPhase(self, playerOwnedTerritoriesList, adjacentTerritories, territory):
         playerOwnedTerritories = ''
         #iterate through all territories in map
         for k, v in self.map.territories.items():
@@ -432,18 +433,29 @@ class Game:
                     self.buttonMap[territory].configure(text= territory + " " + str(1)+ '\n' + self.currentPlayer.label)   
                     self.attackingTerritory.numberOfTroops -= 1
                     self.attackedTerritory.player = self.currentPlayer
+                    
+                    print('attacked! ', end="")
+                    print(self.attackingTerritory.label + ", ", end="")
+                    print(self.attackedTerritory.label)
+                    
                     self.attackingTerritory = None
                     self.attackedTerritory = None
                     
                     #add territory to players territory list and remove from opponents
                     if self.currentPlayer == self.player1:
-                        self.player1.territories.append(territory)
-                        index = self.player2.territories.index(territory)
-                        self.player2.territories.pop(index)  
+                        self.player1.territories.add(territory)
+                        terrList = list(self.player2.territories)
+                        index = terrList.index(territory)    
+                        terrList.pop(index)
+                        self.player2.territories = set(terrList)
                     else:
-                        self.player2.territories.append(territory)
-                        index = self.player1.territories.index(territory)                              
-                        self.player1.territories.pop(index)
+                        self.player2.territories.add(territory)
+                        terrList = list(self.player1.territories)
+                        index = terrList.index(territory)                              
+                        terrList.pop(index)
+                        self.player1.territories = set(terrList)
+                    
+                    return False
                     
             else: 
                 #we need to make sure that the territory being chosen to be attacked
@@ -473,6 +485,8 @@ class Game:
                     
                     if canAdd == True:
                         self.attackedTerritory = self.map.territories[territory]
+            
+            return True
 
         else:
             #if territory clicked is a territory that the current player owns, then we can attack from it
@@ -480,17 +494,56 @@ class Game:
                 self.attackingTerritory = self.map.territories[territory]
 
     def deployPhase(self, territory):
+        #if were done deploying then move on to attack phase
         if self.currentPlayer.troopsAvailable == 0 or self.deployed == True:
             self.phase = 'attack'
             self.attacked = False
+            return False
 
         else:
+            #if the territory is not taken up yet or is being taken up by current player then allow deployment
             if self.map.territories[territory].player is None or self.currentPlayer.label == self.map.territories[territory].player:
                 self.currentPlayer.troopsAvailable -= 1
                 self.map.territories[territory].numberOfTroops += 1
                 self.map.territories[territory].player = self.currentPlayer.label
-                self.currentPlayer.territories.append(territory)
+                self.currentPlayer.territories.add(territory)
                 self.buttonMap[territory].configure(text= territory + " " + str(self.map.territories[territory].numberOfTroops)+ '\n' +self.map.territories[territory].player)
+                return True
+    
+    #random player will simulate player 2
+    def randomPlayer(self):
+        #deploy
+        #pick random territory, only eligible are free territories are player 2 owned or free territories
+        while True:
+            country, terr = random.choice(list(self.map.territories.items()))
+            flag = self.deployPhase(country)
+            if flag == False:
+                break
+
+        #attack
+        #iterate through all territories player owns
+        for i in range(0, len(self.currentPlayer.territories)):
+            #get adjacent territories to current territory
+            attackingTerritory = random.choice(list(self.currentPlayer.territories))
+            #first is attacking territory
+            self.attackPhase([], [], attackingTerritory)
+            attackedTerritoriesList = self.map.territories[attackingTerritory].adjacentTerritories
+            for i in range(len(attackedTerritoriesList)):
+                attackedTerritory = random.choice(attackedTerritoriesList)
+                #second is attacked territory
+                flag = self.attackPhase([], [], attackedTerritory.label)
+
+                if flag == False:
+                    return
+
+            self.attackingTerritory = None
+            self.attackedTerritory = None
+
+
+            
+        #update map
+                
+        #finish move
 
 newGame = Game()
 newGame.startGame()

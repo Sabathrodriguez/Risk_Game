@@ -4,7 +4,6 @@ sys.path.insert(0,"../../")
 from Models.Territory import Territory
 sys.path.insert(0,"..")
 from territories import Territories
-# sys.path.insert(0,"..")
 
 class map:
     def __init__(self, players) -> None:
@@ -70,7 +69,7 @@ class map:
     def connectAfrica(self):
         self.connect('NORTH AFRICA', ['BRAZIL', 'WESTERN EUROPE', 'SOUTHERN EUROPE', 'EGYPT', 'EAST AFRICA', 'CONGO'])
 
-        self.connect('EGYPT', ['NORTH AFRICA', 'EAST AFRICA', 'SOUTHERN EUROPE'])
+        self.connect('EGYPT', ['NORTH AFRICA', 'EAST AFRICA', 'SOUTHERN EUROPE', 'MIDDLE EAST'])
 
         self.connect('CONGO', ['NORTH AFRICA', 'EAST AFRICA', 'SOUTH AFRICA'])
 
@@ -136,14 +135,3 @@ class map:
     def connect(self, fromTerritory, toTerritoryList):
         for el in toTerritoryList:
             self.territories[fromTerritory].adjacentTerritories.append(self.territories[el])
-
-
-# mp = map(['bob'])
-# for k in mp.territories.keys():    
-#     if len(mp.territories[k].adjacentTerritories) > 0:
-#         print(k, end='->')
-#         for v in mp.territories[k].adjacentTerritories:
-#             print(v, end=", ")
-#         print()
-# for territory in mp.territories:
-#     print(territory)   

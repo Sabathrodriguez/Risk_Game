@@ -5,7 +5,7 @@ class Territory:
     #continent represents what continent a territory is in
     def __init__(self, label, continent):
         self.label = label
-        self.player = ''
+        self.player = None
         self.numberOfTroops = 0
         self.adjacentTerritories = []
         self.continent = continent
